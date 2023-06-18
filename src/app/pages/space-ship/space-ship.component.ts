@@ -128,6 +128,7 @@ export class SpaceShipComponent {
     this.bullets = [];
     this.alliens = [];
     this.level = 1;
+    this.score = 0;
     this.positionShip();
     this.drawShip();
     this.timer = setInterval(() => {
