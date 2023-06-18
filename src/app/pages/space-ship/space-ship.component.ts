@@ -120,7 +120,7 @@ export class SpaceShipComponent {
       this.moveAlliens();
       this.checkCollision();
       this.showScore();
-    }, 300);
+    }, 600);
   }
   changeDirection(instruction: string) {
     switch (instruction) {
