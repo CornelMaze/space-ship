@@ -4,42 +4,64 @@ canvas {
 }
 
 .controls {
-  width: 108px;
+  width: 308px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: auto auto auto;
-  grid-template-rows: auto auto auto;
-  grid-template-areas:
-    "a up-arrow b"
-    "left-arrow circle-delete right-arrow"
-    "c down-arrow d"
-  ;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  align-items: center;
 
-  .left-arrow {
-    grid-area: left-arrow;
+
+
+
+
+
+  .directions {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "a up-arrow b"
+      "left-arrow circle-delete right-arrow"
+      "c down-arrow d"
+    ;
+
+
+    .left-arrow {
+      grid-area: left-arrow;
+    }
+
+
+
+    .right-arrow {
+      grid-area: right-arrow;
+    }
+
+    .down-arrow {
+      grid-area: down-arrow;
+    }
+
+    .up-arrow {
+      grid-area: up-arrow;
+    }
+
+    .circle-delete {
+      grid-area: circle-delete;
+    }
+
+    img {
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+    }
   }
 
-
-
-  .right-arrow {
-    grid-area: right-arrow;
+  .shoot {
+    img {
+      width: 54px;
+      height: 54px;
+      cursor: pointer;
+    }
   }
 
-  .down-arrow {
-    grid-area: down-arrow;
-  }
-
-  .up-arrow {
-    grid-area: up-arrow;
-  }
-
-  .circle-delete {
-    grid-area: circle-delete;
-  }
-
-  img {
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-  }
 }
