@@ -122,6 +122,22 @@ export class SpaceShipComponent {
       this.showScore();
     }, 400);
   }
+
+  restartGame() {
+    this.gameOver = false;
+    this.bullets = [];
+    this.alliens = [];
+    this.level = 1;
+    this.positionShip();
+    this.drawShip();
+    this.timer = setInterval(() => {
+      this.moveBullets();
+      this.moveAlliens();
+      this.checkCollision();
+      this.showScore();
+    }, 400);
+  }
+
   changeDirection(instruction: string) {
     switch (instruction) {
       case this.UP:

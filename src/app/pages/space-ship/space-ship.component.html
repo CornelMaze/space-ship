@@ -2,7 +2,7 @@
 
   <canvas #canvas>
   </canvas>
-  <div class="controls">
+  <div class="controls" *ngIf="!gameOver">
     <div class="shoot">
       <img src="../../../assets/circle-delete.svg" class="circle-delete" alt=""
         (click)="changeDirection(direction.space)">
@@ -13,6 +13,9 @@
       <img src="../../../assets/up-arrow.svg" (click)="changeDirection(direction.up)" class="up-arrow" alt="">
       <img src="../../../assets/down-arrow.svg" (click)="changeDirection(direction.down)" class="down-arrow" alt="">
     </div>
+  </div>
+  <div class="restart" *ngIf="gameOver" (click)="restartGame()">
+    <div class="btn">Restart</div>
   </div>
 
 </div>

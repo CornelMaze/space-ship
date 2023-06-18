@@ -11,11 +11,6 @@ canvas {
   flex-direction: row;
   align-items: center;
 
-
-
-
-
-
   .directions {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -64,4 +59,20 @@ canvas {
     }
   }
 
+}
+
+.restart {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 40px;
+
+  .btn {
+    width: 80px;
+    background-color: aqua;
+    padding: 8px;
+    text-align: center;
+    font: 1em sans-serif;
+  }
 }
