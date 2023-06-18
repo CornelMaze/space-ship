@@ -120,7 +120,7 @@ export class SpaceShipComponent {
       this.moveAlliens();
       this.checkCollision();
       this.showScore();
-    }, 400);
+    }, 300);
   }
 
   restartGame() {
@@ -135,7 +135,7 @@ export class SpaceShipComponent {
       this.moveAlliens();
       this.checkCollision();
       this.showScore();
-    }, 400);
+    }, 300);
   }
 
   changeDirection(instruction: string) {
