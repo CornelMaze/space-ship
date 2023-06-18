@@ -253,7 +253,7 @@ export class SpaceShipComponent {
   moveAlliens() {
     this.alliens = this.alliens.filter((allien) => {
       if (allien.y <= this.canvas.height) {
-        allien.y += 5;
+        allien.y += 1;
         return allien;
       }
       if (allien.y >= this.canvas.height) {
