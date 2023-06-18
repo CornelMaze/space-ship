@@ -61,7 +61,7 @@ export class SpaceShipComponent {
     height: 32,
     img: new Image(),
     src: '../../../assets/rocket.svg',
-    waitTime: 5,
+    waitTime: 20,
   };
   bullet: BALL = {
     x: 100,
@@ -120,7 +120,7 @@ export class SpaceShipComponent {
       this.moveAlliens();
       this.checkCollision();
       this.showScore();
-    }, 600);
+    }, 400);
   }
   changeDirection(instruction: string) {
     switch (instruction) {
@@ -169,11 +169,14 @@ export class SpaceShipComponent {
     if (this.score < 100) {
       this.level = 1;
     } else if (this.score > 100 && this.score < 200) {
-      this.level = 3;
+      this.level = 2;
+      this.ship.waitTime = 15;
     } else if (this.score > 200 && this.score < 300) {
       this.level = 3;
+      this.ship.waitTime = 10;
     } else if (this.score > 300 && this.score < 400) {
       this.level = 4;
+      this.ship.waitTime = 5;
     } else if (this.score > 400 && this.score < 500) {
       this.level = 5;
     } else {

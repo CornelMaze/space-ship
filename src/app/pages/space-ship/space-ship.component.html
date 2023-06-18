@@ -3,15 +3,15 @@
   <canvas #canvas>
   </canvas>
   <div class="controls">
+    <div class="shoot">
+      <img src="../../../assets/circle-delete.svg" class="circle-delete" alt=""
+        (click)="changeDirection(direction.space)">
+    </div>
     <div class="directions">
       <img src="../../../assets/left-arrow.svg" (click)="changeDirection(direction.left)" alt="" class="left-arrow">
       <img src="../../../assets/right-arrow.svg" (click)="changeDirection(direction.right)" alt="" class="right-arrow">
       <img src="../../../assets/up-arrow.svg" (click)="changeDirection(direction.up)" class="up-arrow" alt="">
       <img src="../../../assets/down-arrow.svg" (click)="changeDirection(direction.down)" class="down-arrow" alt="">
-    </div>
-    <div class="shoot">
-      <img src="../../../assets/circle-delete.svg" class="circle-delete" alt=""
-        (click)="changeDirection(direction.space)">
     </div>
   </div>
 
