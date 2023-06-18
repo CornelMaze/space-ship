@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostBinding,
   HostListener,
   ViewChild,
   ViewEncapsulation,
@@ -10,7 +11,8 @@ interface BALL {
   x: number;
   y: number;
   size: number;
-  color: string;
+  color?: string;
+  src?: string;
 }
 
 @Component({
@@ -20,6 +22,22 @@ interface BALL {
   encapsulation: ViewEncapsulation.None,
 })
 export class SpaceShipComponent {
+  scrHeight: any;
+  scrWidth: any;
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?: any) {
+    this.scrHeight = window.innerHeight;
+    this.scrWidth = window.innerWidth;
+    if (this.canvas) {
+      this.canvas.width = this.scrWidth - 20;
+      this.canvas.height = this.scrHeight - 140;
+    }
+  }
+
+  constructor() {
+    this.getScreenSize();
+  }
+
   UP = 'ArrowUp';
   DOWN = 'ArrowDown';
   RIGHT = 'ArrowRight';
@@ -42,25 +60,32 @@ export class SpaceShipComponent {
     width: 24,
     height: 32,
     img: new Image(),
-    src: '../../../assets/rocket-ship.png',
+    src: '../../../assets/rocket.svg',
     waitTime: 5,
   };
   bullet: BALL = {
     x: 100,
     y: 50,
     size: 5,
-    color: 'rgb(0,0,255)',
+    src: '../../../assets/bullet.svg',
   };
   bullets: BALL[] = [];
   allien: BALL = {
     x: 100,
     y: 50,
     size: 10,
-    color: 'rgb(0,0,255)',
+    src: '../../../assets/aliens-svgrepo-com.svg',
   };
   alliens: BALL[] = [];
   speed = 5;
-
+  direction = {
+    down: 'ArrowDown',
+    up: 'ArrowUp',
+    right: 'ArrowRight',
+    left: 'ArrowLeft',
+    space: 'Space',
+  };
+  level = 1;
   @HostListener('document:keyup', ['$event'])
   keyupHandler(event: KeyboardEvent) {
     if (this.gameOver) return;
@@ -78,7 +103,27 @@ export class SpaceShipComponent {
         this.ship.height
       );
     }
-    switch (event.code) {
+    this.changeDirection(event.code);
+  }
+
+  ngOnInit(): void {
+    this.canvas = this.myCanvas.nativeElement as HTMLCanvasElement;
+    let context = this.canvas.getContext('2d');
+    this.context = context!;
+    this.canvas.width = this.scrWidth - 20;
+    this.canvas.height = this.scrHeight - 140;
+    this.positionShip();
+    this.drawShip();
+    this.drawBullets();
+    this.timer = setInterval(() => {
+      this.moveBullets();
+      this.moveAlliens();
+      this.checkCollision();
+      this.showScore();
+    }, 300);
+  }
+  changeDirection(instruction: string) {
+    switch (instruction) {
       case this.UP:
         if (this.ship.y <= 0) {
           this.ship.y = 0;
@@ -109,53 +154,79 @@ export class SpaceShipComponent {
         break;
       case this.SPACE:
         let newBullet = Object.create(this.bullet);
-        newBullet.x = this.ship.x + this.ship.width / 2;
-        newBullet.y = this.ship.y;
+        newBullet.x = this.ship.x + this.ship.width / 2 - this.bullet.size * 2;
+        newBullet.y = this.ship.y - this.ship.height / 2;
+        if (this.score > 100) {
+          newBullet.src = '../../../assets/bullet-2.svg';
+        }
         this.bullets.push(newBullet);
         break;
     }
     this.drawShip();
   }
 
-  ngOnInit(): void {
-    this.canvas = this.myCanvas.nativeElement as HTMLCanvasElement;
-    let context = this.canvas.getContext('2d');
-    this.context = context!;
-    this.canvas.width = 320;
-    this.canvas.height = 640;
-    this.positionShip();
-    this.drawShip();
-    this.drawBullets();
-    this.timer = setInterval(() => {
-      this.moveBullets();
-      this.moveAlliens();
-      this.checkCollision();
-      this.showScore();
-    }, 300);
-  }
-
   createAlliens() {
+    if (this.score < 100) {
+      this.level = 1;
+    } else if (this.score > 100 && this.score < 200) {
+      this.level = 3;
+    } else if (this.score > 200 && this.score < 300) {
+      this.level = 3;
+    } else if (this.score > 300 && this.score < 400) {
+      this.level = 4;
+    } else if (this.score > 400 && this.score < 500) {
+      this.level = 5;
+    } else {
+      this.level = 6;
+    }
+
     let newAllien = Object.create(this.allien);
     let xPos = Math.floor(Math.random() * this.canvas.width);
     newAllien.x = xPos + newAllien.size;
+    if (newAllien.x >= this.canvas.width - newAllien.size) {
+      newAllien.x = this.canvas.width - newAllien.size * 2;
+    }
+    if (newAllien.x <= 0) {
+      newAllien.x = 0;
+    }
     newAllien.y = 0;
     newAllien.size = this.allien.size;
 
-    let RED = Math.floor(Math.random() * 255);
-    let GREEN = Math.floor(Math.random() * 255);
-    let BLUE = Math.floor(Math.random() * 255);
-    let alpha = Math.ceil(Math.random() * 10) * 0.1;
-    newAllien.color = `rgba(${RED}, ${GREEN}, ${BLUE}, ${alpha})`;
+    let chooseAlien = Math.floor(Math.random() * this.level);
+    switch (chooseAlien) {
+      case 0:
+        newAllien.src = '../../../assets/alien-1.svg';
+        break;
+      case 1:
+        newAllien.src = '../../../assets/alien-2.svg';
+        break;
+      case 2:
+        newAllien.src = '../../../assets/alien-3.svg';
+        break;
+      case 3:
+        newAllien.src = '../../../assets/alien-4.svg';
+        break;
+      case 4:
+        newAllien.src = '../../../assets/alien-5.svg';
+        break;
+      case 5:
+        newAllien.src = '../../../assets/alien-6.svg';
+        break;
+      default:
+        newAllien.src = '../../../assets/alien-5.svg';
+        break;
+    }
+
     this.alliens.push(newAllien);
   }
 
   drawAlliens() {
     for (let allien of this.alliens) {
-      this.context.beginPath();
-      this.context.fillStyle = allien.color;
-      this.context.arc(allien.x, allien.y, allien.size, 0, 360, false);
-      this.context.fill();
-      this.context.closePath();
+      let newAllien = new Image();
+      newAllien.src = allien.src!;
+      newAllien.onload = () => {
+        this.context.drawImage(newAllien, allien.x, allien.y, 24, 24);
+      };
     }
   }
 
@@ -169,7 +240,6 @@ export class SpaceShipComponent {
         clearInterval(this.timer);
         this.endGame();
       }
-
       return;
     });
     this.drawAlliens();
@@ -194,11 +264,11 @@ export class SpaceShipComponent {
 
   drawBullets() {
     for (let bullet of this.bullets) {
-      this.context.beginPath();
-      this.context.fillStyle = bullet.color;
-      this.context.arc(bullet.x, bullet.y, bullet.size, 0, 360, false);
-      this.context.fill();
-      this.context.closePath();
+      let newBullet = new Image();
+      newBullet.src = bullet.src!;
+      newBullet.onload = () => {
+        this.context.drawImage(newBullet, bullet.x, bullet.y, 24, 24);
+      };
     }
   }
 
@@ -247,7 +317,6 @@ export class SpaceShipComponent {
         }
         this.bullets.splice(index, 1);
         this.score += 1;
-        console.log(this.score, 'score');
         return;
       });
     });

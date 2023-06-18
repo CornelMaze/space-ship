@@ -2,3 +2,44 @@ canvas {
   border: 1px dashed black;
   margin: 50;
 }
+
+.controls {
+  width: 108px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "a up-arrow b"
+    "left-arrow circle-delete right-arrow"
+    "c down-arrow d"
+  ;
+
+  .left-arrow {
+    grid-area: left-arrow;
+  }
+
+
+
+  .right-arrow {
+    grid-area: right-arrow;
+  }
+
+  .down-arrow {
+    grid-area: down-arrow;
+  }
+
+  .up-arrow {
+    grid-area: up-arrow;
+  }
+
+  .circle-delete {
+    grid-area: circle-delete;
+  }
+
+  img {
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+  }
+}
