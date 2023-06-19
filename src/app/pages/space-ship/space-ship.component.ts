@@ -113,15 +113,17 @@ export class SpaceShipComponent {
     this.canvas.width = this.scrWidth - 20;
     this.canvas.height = this.scrHeight - 140;
     this.positionShip();
-    this.drawShip();
-    this.drawBullets();
-    this.timer = setInterval(() => {
-      this.moveBullets();
-      this.moveAlliens();
-      this.checkCollision();
-      this.showScore();
-    }, 300);
+    this.timer = window.requestAnimationFrame(this.render);
   }
+  render = () => {
+    this.clearCanvas();
+    this.decideToCreateAllien();
+    this.moveBullets();
+    this.moveAlliens();
+    this.drawShip();
+    this.checkCollision();
+    this.showScore();
+  };
 
   restartGame() {
     this.gameOver = false;
@@ -131,12 +133,7 @@ export class SpaceShipComponent {
     this.score = 0;
     this.positionShip();
     this.drawShip();
-    this.timer = setInterval(() => {
-      this.moveBullets();
-      this.moveAlliens();
-      this.checkCollision();
-      this.showScore();
-    }, 300);
+    window.requestAnimationFrame(this.render);
   }
 
   changeDirection(instruction: string) {
@@ -179,7 +176,6 @@ export class SpaceShipComponent {
         this.bullets.push(newBullet);
         break;
     }
-    this.drawShip();
   }
 
   createAlliens() {
@@ -244,20 +240,18 @@ export class SpaceShipComponent {
     for (let allien of this.alliens) {
       let newAllien = new Image();
       newAllien.src = allien.src!;
-      newAllien.onload = () => {
-        this.context.drawImage(newAllien, allien.x, allien.y, 24, 24);
-      };
+      this.context.drawImage(newAllien, allien.x, allien.y, 24, 24);
     }
   }
 
   moveAlliens() {
     this.alliens = this.alliens.filter((allien) => {
       if (allien.y <= this.canvas.height) {
-        allien.y += 1;
+        allien.y += 0.2;
         return allien;
       }
       if (allien.y >= this.canvas.height) {
-        clearInterval(this.timer);
+        window.cancelAnimationFrame(this.timer);
         this.endGame();
       }
       return;
@@ -265,8 +259,17 @@ export class SpaceShipComponent {
     this.drawAlliens();
   }
 
+  decideToCreateAllien() {
+    if (this.ship.waitTime === 0) {
+      this.createAlliens();
+      let randomTime = Math.floor(Math.random() * 120) + 60;
+      this.ship.waitTime = randomTime;
+    } else {
+      this.ship.waitTime--;
+    }
+  }
+
   moveBullets() {
-    this.clearBullets();
     this.bullets = this.bullets.filter((bullet) => {
       if (bullet.y > 0) {
         bullet.y -= 5;
@@ -286,36 +289,25 @@ export class SpaceShipComponent {
     for (let bullet of this.bullets) {
       let newBullet = new Image();
       newBullet.src = bullet.src!;
-      newBullet.onload = () => {
-        this.context.drawImage(newBullet, bullet.x, bullet.y, 24, 24);
-      };
+      this.context.drawImage(newBullet, bullet.x, bullet.y, 24, 24);
     }
   }
 
-  clearBullets() {
+  clearCanvas() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.drawShip();
+    this.timer = window.requestAnimationFrame(this.render);
   }
 
   drawShip() {
-    if (this.ship.waitTime === 0) {
-      this.createAlliens();
-      let randomTime = Math.floor(Math.random() * 20);
-      this.ship.waitTime = randomTime;
-    } else {
-      this.ship.waitTime--;
-    }
     let ship = new Image();
     ship.src = this.ship.src;
-    ship.onload = () => {
-      this.context.drawImage(
-        ship,
-        this.ship.x,
-        this.ship.y,
-        this.ship.width,
-        this.ship.height
-      );
-    };
+    this.context.drawImage(
+      ship,
+      this.ship.x,
+      this.ship.y,
+      this.ship.width,
+      this.ship.height
+    );
   }
 
   hitTestCircle(allien: BALL, bullet: BALL) {
